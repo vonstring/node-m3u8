@@ -235,7 +235,7 @@ function getVariantM3U(callback) {
     var stream = Readable.from(buffer);
     stream.pipe(parser);
     parser.on('m3u', function(m3u) {
-      callback(null, m3u, buffer.toString());
+      callback(null, m3u, buffer.toString().replace(/(\r\n)/gm, '\n'));
     });
   })
 }
