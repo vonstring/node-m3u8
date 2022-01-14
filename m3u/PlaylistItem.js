@@ -18,7 +18,7 @@ PlaylistItem.prototype.toString = function toString() {
   if (this.get('start-timeoffset')) {
     var line = `#EXT-X-START:TIME-OFFSET=${this.get('start-timeoffset')}`;
     if (this.get('start-precise')) {
-      line += `,PRECISE=${this.get('start-precise')}`
+      line += `,PRECISE=${this.get('start-precise') ? 'YES' : 'NO'}`
     }
     output.push(line);
   }
