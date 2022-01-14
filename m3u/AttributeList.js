@@ -40,6 +40,8 @@ var dataTypes = AttributeList.dataTypes = {
   'key-keyformatversions': 'quoted-string',
   'map-uri'              : 'quoted-string',
   'map-byterange'        : 'quoted-string',
+  'start-timeoffset'     : 'decimal-floating-point',
+  'start-precise'        : 'boolean'
 };
 
 AttributeList.prototype.mergeAttributes = function mergeAttributes(attributes) {

@@ -208,6 +208,57 @@ describe('parser', function() {
     });
   });
 
+  describe('#EXT-X-START', function () {
+    it('should indicate start with attributes if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=15,PRECISE=YES');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(15);
+      parser.currentItem.get('start-precise').should.eql(true);
+    });
+    it('should indicate start with only timeoffset attribute if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=15');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(15);
+      (parser.currentItem.get('start-precise') === undefined).should.be.true();
+    });
+    it('should indicate start with only timeoffset attribute (decimal) if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=15.625');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(15.625);
+      (parser.currentItem.get('start-precise') === undefined).should.be.true();
+    });
+    it('should indicate start with only timeoffset attribute (negative decimal) if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=-15.500');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(-15.5);
+      (parser.currentItem.get('start-precise') === undefined).should.be.true();
+    });
+    it('should indicate start with only timeoffset attribute (negative integer) if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=-15');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(-15);
+      (parser.currentItem.get('start-precise') === undefined).should.be.true();
+    });
+    it('should indicate start with attributes (PRECISE=NO) if present', function () {
+      var parser = getParser();
+      parser['EXT-X-START']('TIME-OFFSET=15,PRECISE=NO');
+      parser.EXTINF('10,some title');
+      parser.currentItem.constructor.name.should.eql('PlaylistItem');
+      parser.currentItem.get('start-timeoffset').should.eql(15);
+      parser.currentItem.get('start-precise').should.eql(false);
+    });
+  });
+
   describe('#EXT-X-PROGRAM-DATE-TIME', function() {
     it('should indicate program-date-time with date if present', function() {
       var parser = getParser();

@@ -23,6 +23,7 @@ var m3uParser = module.exports = function m3uParser() {
   this.dateRangeData = null;
   this.key = null;
   this.map = null;
+  this.startOffset = null;
 
   this.on('data', this.parse.bind(this));
   var self = this;
@@ -158,6 +159,14 @@ m3uParser.prototype['EXTINF'] = function parseInf(data) {
     }
     this.map = null;
   }
+
+  if (this.startOffset !== null) {
+    this.currentItem.set('start-timeoffset', this.startOffset.timeOffset);
+    if (this.startOffset.precise) {
+      this.currentItem.set('start-precise', this.startOffset.precise);
+    }
+    this.startOffset = null;
+  }
 };
 
 m3uParser.prototype['EXT-X-DISCONTINUITY'] = function parseInf() {
@@ -289,6 +298,22 @@ m3uParser.prototype['EXT-X-MAP'] = function parseMap(data) {
   var byterange = attr.find(elem => elem.key.toLowerCase() === 'byterange');
   if (byterange) {
     this.map.byterange = byterange.value;
+  }
+};
+
+m3uParser.prototype['EXT-X-START'] = function parseInf(data) {
+  this.startOffset = {
+    timeOffset: null,
+    precise: null
+  }
+  var attr = this.parseAttributes(data);
+  var offset = attr.find(elem => elem.key.toLowerCase() === 'time-offset');
+  if (offset) {
+    this.startOffset.timeOffset = offset.value;
+  } 
+  var precise = attr.find(elem => elem.key.toLowerCase() === 'precise');
+  if (precise) {
+    this.startOffset.precise = precise.value;
   }
 };
 

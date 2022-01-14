@@ -15,6 +15,13 @@ PlaylistItem.create = function createPlaylistItem(data) {
 
 PlaylistItem.prototype.toString = function toString() {
   var output = [];
+  if (this.get('start-timeoffset')) {
+    var line = `#EXT-X-START:TIME-OFFSET=${this.get('start-timeoffset')}`;
+    if (this.get('start-precise')) {
+      line += `,PRECISE=${this.get('start-precise')}`
+    }
+    output.push(line);
+  }
   if (this.get('map-uri')) {
     var line = `#EXT-X-MAP:URI="${this.get('map-uri')}"`;
     if (this.get('map-byterange')) {
