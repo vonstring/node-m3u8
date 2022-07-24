@@ -8,6 +8,7 @@ var util = require('util'),
 
 // used for splitting strings by commas not within double quotes
 var NON_QUOTED_COMMA = /,(?=(?:[^"]|"[^"]*")*$)/;
+var NON_QUOTED_SPACE = / (?=(?:[^"]|"[^"]*")*$)/;
 
 var m3uParser = module.exports = function m3uParser() {
   ChunkedStream.apply(this, ['\n', true]);
@@ -89,10 +90,24 @@ m3uParser.prototype.addItem = function addItem(item) {
   return item;
 };
 
+m3uParser.prototype.parseExtinfData = function parseExtinfData(data) {
+  const extinfData = {};
+  for (let item of data) {
+    let [_, k, v] = item.match(/([\w\-]+)[\s]*=[\s]*((?:[^"\s]+)|"(?:[^"]*)")/);
+    if (v.startsWith('"') && v.endsWith('"')) {
+      v = v.substr(1, v.length-2);
+    }
+    extinfData[k] = v;
+  }
+  return extinfData;
+}
+
 m3uParser.prototype['EXTINF'] = function parseInf(data) {
   this.addItem(new PlaylistItem);
 
-  data = data.split(',');
+  data = data.split(NON_QUOTED_COMMA);
+  var [duration, ...extinfData] = data[0].split(NON_QUOTED_SPACE);
+  this.currentItem.extinfData = this.parseExtinfData(extinfData);
   this.currentItem.set('duration', parseFloat(data[0]));
   this.currentItem.set('title', data[1]);
   if (this.playlistDiscontinuity) {

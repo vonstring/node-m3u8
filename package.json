@@ -1,5 +1,5 @@
 {
-    "name": "@eyevinn/m3u8",
+    "name": "@vonstring/m3u8",
     "version": "0.5.2",
     "description": "streaming m3u8 parser for Apple's HTTP Live Streaming protocol",
     "main": "./parser.js",

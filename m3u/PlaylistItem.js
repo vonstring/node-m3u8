@@ -87,8 +87,13 @@ PlaylistItem.prototype.toString = function toString() {
     output.push('#EXT-X-DATERANGE:' + s);
   }
   if (this.get('duration') != null || this.get('title') != null) {
+    let extinfData = '';
+    if (Object.keys(this.extinfData).length > 0) {
+      extinfData += ' ';
+      extinfData += Object.entries(this.extinfData).map(([k, v]) => `${k}="${v}"`).join(' ');
+    }
     output.push(
-      '#EXTINF:' + [this.get('duration').toFixed(4), this.get('title')].join(',')
+      '#EXTINF:' + [this.get('duration').toFixed(4) + extinfData, this.get('title')].join(',')
     );
   }
   if (this.get('byteRange') != null) {
