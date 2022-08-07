@@ -32,7 +32,22 @@ M3U.prototype.set = function setProperty(key, value) {
 };
 
 M3U.prototype.addItem = function addItem(item) {
-  this.items[item.constructor.name].push(item);
+  let itemType;
+  switch (item.constructor) {
+    case M3U.PlaylistItem:
+      itemType = 'PlaylistItem';
+      break;
+    case M3U.MediaItem:
+      itemType = 'MediaItem';
+      break;
+    case M3U.StreamItem:
+      itemType = 'StreamItem';
+      break;
+    case M3U.IframeStreamItem:
+      itemType = 'IframeStreamItem';
+      break;
+  }
+  this.items[itemType].push(item);
 
   return this;
 };
