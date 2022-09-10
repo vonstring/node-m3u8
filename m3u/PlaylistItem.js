@@ -88,7 +88,7 @@ PlaylistItem.prototype.toString = function toString() {
   }
   if (this.get('duration') != null || this.get('title') != null) {
     let extinfData = '';
-    if (Object.keys(this.extinfData).length > 0) {
+    if (this.extinfData && Object.keys(this.extinfData).length > 0) {
       extinfData += ' ';
       extinfData += Object.entries(this.extinfData).map(([k, v]) => `${k}="${v}"`).join(' ');
     }
