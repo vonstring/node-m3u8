@@ -93,7 +93,9 @@ m3uParser.prototype.addItem = function addItem(item) {
 m3uParser.prototype.parseExtinfData = function parseExtinfData(data) {
   const extinfData = {};
   for (let item of data) {
-    let [_, k, v] = item.match(/([\w\-]+)[\s]*=[\s]*((?:[^"\s]+)|"(?:[^"]*)")/);
+    const match = item.match(/([\w\-]+)[\s]*=[\s]*((?:[^"\s]+)|"(?:[^"]*)")/);
+    if (!match) continue;
+    let [_, k, v] = match;
     if (v.startsWith('"') && v.endsWith('"')) {
       v = v.substr(1, v.length-2);
     }
